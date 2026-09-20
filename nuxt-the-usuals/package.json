@@ -1,0 +1,29 @@
+{
+  "name": "nuxt-the-usuals",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/ui": "^4.4.0",
+    "@vueuse/nuxt": "^14.1.0",
+    "lodash-es": "^4.17.23",
+    "nuxt": "^4.4.8",
+    "nuxt-auth-utils": "^0.5.29",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.27",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^26.0.0",
+    "vue-tsc": "^3.3.5"
+  }
+}
