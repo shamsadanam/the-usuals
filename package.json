@@ -1,0 +1,22 @@
+{
+  "name": "the-usuals",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm run \"/^dev:(next|nuxt)$/\"",
+    "dev:next": "pnpm --filter next-the-usuals run dev --port 3000",
+    "dev:nuxt": "pnpm --filter nuxt-the-usuals run dev --port 3001",
+    "build": "pnpm run build:next && pnpm run build:nuxt",
+    "build:next": "pnpm --filter next-the-usuals run build",
+    "build:nuxt": "pnpm --filter nuxt-the-usuals run build",
+    "start:next": "pnpm --filter next-the-usuals run start --port 3000",
+    "generate:nuxt": "pnpm --filter nuxt-the-usuals run generate",
+    "preview:nuxt": "pnpm --filter nuxt-the-usuals run preview --port 3001",
+    "lint:next": "pnpm --filter next-the-usuals run lint",
+    "clean": "rm -rf node_modules next.js-the-usuals/node_modules next.js-the-usuals/.next nuxt-the-usuals/node_modules nuxt-the-usuals/.nuxt nuxt-the-usuals/.output"
+  }
+}

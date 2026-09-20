@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+
+# logs
+logs
+*.log
+npm-debug.log*
+.pnpm-debug.log*
+
+# env files
+.env
+.env.*
+!.env.example
+
+# editors / os
+.DS_Store
+.idea
+.fleet
+.vscode/*
+!.vscode/extensions.json

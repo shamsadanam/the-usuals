@@ -1,0 +1,9 @@
+packages:
+  - next.js-the-usuals
+  - nuxt-the-usuals
+
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+  vue-demi: true
