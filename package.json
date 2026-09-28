@@ -7,16 +7,19 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "pnpm run \"/^dev:(next|nuxt)$/\"",
-    "dev:next": "pnpm --filter next-the-usuals run dev --port 3000",
-    "dev:nuxt": "pnpm --filter nuxt-the-usuals run dev --port 3001",
-    "build": "pnpm run build:next && pnpm run build:nuxt",
-    "build:next": "pnpm --filter next-the-usuals run build",
-    "build:nuxt": "pnpm --filter nuxt-the-usuals run build",
-    "start:next": "pnpm --filter next-the-usuals run start --port 3000",
-    "generate:nuxt": "pnpm --filter nuxt-the-usuals run generate",
-    "preview:nuxt": "pnpm --filter nuxt-the-usuals run preview --port 3001",
-    "lint:next": "pnpm --filter next-the-usuals run lint",
-    "clean": "rm -rf node_modules next.js-the-usuals/node_modules next.js-the-usuals/.next nuxt-the-usuals/node_modules nuxt-the-usuals/.nuxt nuxt-the-usuals/.output"
+    "dev": "pnpm run \"/^dev:(docs|next|nuxt)$/\"",
+    "dev:docs": "pnpm --filter docs run dev --port 3002",
+    "dev:next": "pnpm --filter example-next run dev --port 3000",
+    "dev:nuxt": "pnpm --filter example-nuxt run dev --port 3001",
+    "build": "pnpm -r run build",
+    "build:docs": "pnpm --filter docs run build",
+    "build:next": "pnpm --filter example-next run build",
+    "build:nuxt": "pnpm --filter example-nuxt run build",
+    "start:next": "pnpm --filter example-next run start --port 3000",
+    "generate:docs": "pnpm --filter docs run generate",
+    "preview:docs": "pnpm --filter docs run preview --port 3002",
+    "preview:nuxt": "pnpm --filter example-nuxt run preview --port 3001",
+    "lint:next": "pnpm --filter example-next run lint",
+    "clean": "rm -rf node_modules docs/node_modules docs/.nuxt docs/.output docs/.data examples/*/node_modules examples/*/.next examples/*/.nuxt examples/*/.output"
   }
 }

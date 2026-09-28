@@ -1,6 +1,6 @@
 packages:
-  - next.js-the-usuals
-  - nuxt-the-usuals
+  - docs
+  - examples/*
 
 allowBuilds:
   '@parcel/watcher': true
