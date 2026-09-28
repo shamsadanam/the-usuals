@@ -1,3 +1,28 @@
+// A blob: URL drops the response headers, so the name the server chose has to be copied onto the link.
+const filenameFromDisposition = (header: string | null): string | null => {
+  if (!header) return null;
+
+  const encoded = header.match(/filename\*=UTF-8''([^;]+)/i)?.[1];
+  if (encoded) {
+    try {
+      return decodeURIComponent(encoded);
+    } catch {
+      // Malformed encoding; the plain filename below is still usable.
+    }
+  }
+
+  return header.match(/filename="([^"]+)"/i)?.[1] ?? null;
+};
+
+const filenameFromUrl = (fileUrl: string): string => {
+  const basename = fileUrl.split(/[?#]/)[0]?.split("/").pop() ?? "";
+  try {
+    return decodeURIComponent(basename);
+  } catch {
+    return basename;
+  }
+};
+
 export const useFileDownloader = () => {
   const toast = useToast();
   const isDownloading = ref(false);
@@ -5,8 +30,9 @@ export const useFileDownloader = () => {
   const download = async (
     fileUrl: string | undefined | null,
     showToast: boolean = true,
+    filename?: string | null,
   ): Promise<void> => {
-    if (!process.client) return;
+    if (!import.meta.client) return;
 
     if (!fileUrl) {
       if (showToast) {
@@ -42,7 +68,10 @@ export const useFileDownloader = () => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = "";
+      link.download =
+        filename ||
+        filenameFromDisposition(response.headers.get("content-disposition")) ||
+        filenameFromUrl(fileUrl);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -59,8 +88,6 @@ export const useFileDownloader = () => {
         });
       }
       throw error;
-    } finally {
-      return;
     }
   };
 

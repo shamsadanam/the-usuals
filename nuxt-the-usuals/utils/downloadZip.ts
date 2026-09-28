@@ -28,7 +28,7 @@ export async function downloadZip(
   zipName: string,
   showToast?: ReturnType<typeof useToast>,
 ): Promise<void> {
-  if (!process.client) return;
+  if (!import.meta.client) return;
 
   if (!items || !items.length) {
     showToast?.add({

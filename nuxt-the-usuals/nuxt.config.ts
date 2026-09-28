@@ -11,6 +11,8 @@ export default defineNuxtConfig({
     "@nuxt/content",
   ],
   runtimeConfig: {
+    // Nuxt only maps NUXT_ALLOWED_DOMAINS onto a key declared here.
+    allowedDomains: "",
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
       enableProxy: process.env.enableProxy,
