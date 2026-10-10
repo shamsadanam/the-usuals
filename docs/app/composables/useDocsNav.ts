@@ -3,7 +3,7 @@ export interface DocItem {
   path: string;
   description?: string;
   badge?: string;
-  type?: "Component" | "Composable" | "Utility" | "Pattern" | "Guide";
+  type?: "Component" | "Composable" | "Plugin" | "Utility" | "Pattern" | "Guide";
 }
 
 export interface DocCategory {
@@ -64,6 +64,18 @@ export const docCategories: DocCategory[] = [
         description: "Client-side single file download composable with reactive progress tracking and toast alerts",
         badge: "Composable",
         type: "Composable",
+      },
+    ],
+  },
+  {
+    category: "Nuxt · Plugins",
+    items: [
+      {
+        title: "$api Plugin",
+        path: "/nuxt/plugins/api",
+        description: "Imperative $fetch client instance with Bearer auth injection and 401 logout handling",
+        badge: "Plugin",
+        type: "Plugin",
       },
     ],
   },

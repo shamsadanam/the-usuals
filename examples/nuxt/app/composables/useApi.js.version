@@ -22,7 +22,7 @@ export const useApi = createUseFetch((callerOptions = {}) => {
     // server proxy (/api/proxy) instead of the external API.
     baseURL:
       callerOptions.baseURL ??
-      (config.public.enableProxy ? "/api/proxy" : config.public.apiBase),
+      (config.public.enableProxy ? "/api/proxy" : config.public.apiBaseUrl),
 
     // Per-call `auth: true` opts a request into the bearer token.
     // Set headers here (not as a factory `headers` object) so per-call headers

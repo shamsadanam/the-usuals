@@ -18,6 +18,9 @@ Welcome to **The Usuals** documentation! This project contains a collection of r
 - **[useFormattedProperties](/nuxt/composables/use-formatted-properties)**: Object formatter composable for Start Case labels, date formatting, and null fallbacks.
 - **[useFileDownloader](/nuxt/composables/use-file-downloader)**: Client-side single file download composable with reactive progress tracking and toast alerts.
 
+### Plugins
+- **[$api Plugin](/nuxt/plugins/api)**: Imperative pre-configured `$fetch` client plugin with Bearer auth injection, proxy base routing, and auto-logout on `401`.
+
 ### Utilities
 - **[downloadZip & Download Utilities](/nuxt/utilities/download-zip)**: Client-side ZIP archive bundling, direct download function, and secure server-side download streaming utilities.
 

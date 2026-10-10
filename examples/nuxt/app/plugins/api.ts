@@ -23,7 +23,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   // proxy (/api/proxy) instead of hitting the external API directly.
   const baseURL = config.public.enableProxy
     ? "/api/proxy"
-    : (config.public.apiBase as string);
+    : (config.public.apiBaseUrl as string);
 
   const api = $fetch.create({
     baseURL,

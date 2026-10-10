@@ -12,10 +12,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // Nuxt only maps NUXT_ALLOWED_DOMAINS onto a key declared here.
     allowedDomains: "",
+    apiTargetUrl: process.env.NUXT_API_TARGET_URL || "",
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
-      enableProxy: process.env.enableProxy,
-      xxx: process.env.xxx,
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || "",
+      enableProxy:
+        process.env.ENABLE_PROXY === "true" ||
+        process.env.NUXT_PUBLIC_ENABLE_PROXY === "true",
     },
   },
 });
