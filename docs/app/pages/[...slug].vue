@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute();
+const colorMode = useColorMode();
 const mobileMenuOpen = ref(false);
 
 const path = computed(() => route.path.replace(/\/$/, "") || "/");
@@ -9,178 +10,133 @@ const { data: page, error } = await useAsyncData(`content-${path.value}`, () => 
   return queryCollection("docs").path(path.value).first();
 });
 
-// Fetch dynamic collection navigation
-const { data: navigation } = await useAsyncData("docs-navigation", () => {
-  return queryCollectionNavigation("docs");
-});
-
-const searchQuery = ref("");
-
-// Curated menu items to ensure menu is ALWAYS fully populated & interactive
-const staticMenuItems = [
-  {
-    category: "Overview",
-    items: [
-      { title: "Documentation Hub", path: "/", icon: "i-heroicons-home" },
-    ],
+// Close mobile drawer on route change
+watch(
+  () => route.path,
+  () => {
+    mobileMenuOpen.value = false;
   },
-  {
-    category: "Nuxt · Components",
-    items: [
-      { title: "PP (Pretty Print)", path: "/nuxt/components/pp", icon: "i-heroicons-code-bracket" },
-      { title: "DownloadFilesButton", path: "/nuxt/components/download-files-button", icon: "i-heroicons-arrow-down-tray" },
-    ],
-  },
-  {
-    category: "Nuxt · Composables & Utilities",
-    items: [
-      { title: "useApi", path: "/nuxt/composables/use-api", icon: "i-heroicons-globe-alt" },
-      { title: "useFormattedProperties", path: "/nuxt/composables/use-formatted-properties", icon: "i-heroicons-sparkles" },
-      { title: "useFileDownloader & downloadZip", path: "/nuxt/composables/use-file-downloader", icon: "i-heroicons-document-arrow-down" },
-    ],
-  },
-  {
-    category: "Nuxt · Patterns",
-    items: [
-      { title: "Authentication & Login Flow", path: "/nuxt/patterns/authentication-login", icon: "i-heroicons-lock-closed" },
-    ],
-  },
-];
+);
 
-// Helper to filter static items
-const filteredStaticItems = computed(() => {
-  if (!searchQuery.value) return staticMenuItems;
-  const q = searchQuery.value.toLowerCase();
-
-  return staticMenuItems
-    .map((group) => {
-      const filtered = group.items.filter((item) =>
-        item.title.toLowerCase().includes(q),
-      );
-      if (filtered.length > 0) {
-        return { ...group, items: filtered };
-      }
-      return null;
-    })
-    .filter(Boolean) as typeof staticMenuItems;
+const tocLinks = computed(() => {
+  // @ts-expect-error Nuxt Content collection property
+  const links = page.value?.body?.toc?.links || page.value?.toc?.links;
+  return Array.isArray(links) ? links : [];
 });
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-950 text-gray-100 flex flex-col font-sans">
-    <!-- Header with Mobile Menu Toggle Button -->
-    <header class="border-b border-gray-800 bg-gray-900/90 backdrop-blur sticky top-0 z-40">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <!-- Mobile Toggle Button -->
-          <button
-            type="button"
-            class="md:hidden p-2 rounded-lg bg-gray-800 text-gray-300 hover:text-white border border-gray-700 focus:outline-none"
-            @click="mobileMenuOpen = !mobileMenuOpen"
-          >
-            <span class="sr-only">Toggle Sidebar Menu</span>
-            <span class="text-lg font-bold">☰ Menu</span>
-          </button>
+  <div class="min-h-screen bg-[#ffffff] dark:bg-[#1b1b1f] text-[#213547] dark:text-[#dfdfd6] flex flex-col font-sans transition-colors duration-200">
+    <!-- Header with Mobile Drawer Toggle & Actions -->
+    <DocsHeader
+      :mobile-menu-open="mobileMenuOpen"
+      @toggle-mobile-menu="mobileMenuOpen = !mobileMenuOpen"
+    />
 
-          <NuxtLink to="/" class="flex items-center gap-2 text-sky-400 font-bold text-lg hover:text-sky-300 transition-colors">
-            <span class="text-xl">&lt;/&gt;</span>
-            <span>The Usuals Docs</span>
-          </NuxtLink>
-        </div>
-
-      </div>
-    </header>
-
-    <!-- Main Container -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex w-full">
-      <!-- Desktop Permanent Left Side Navigation Menu -->
-      <aside class="w-64 border-r border-gray-800/80 py-6 pr-6 hidden md:block shrink-0">
-        <div class="mb-4">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search docs..."
-            class="w-full px-3 py-1.5 text-xs bg-gray-900 border border-gray-800 rounded-lg text-gray-200 focus:outline-none focus:border-sky-500 transition-colors"
-          />
-        </div>
-
-        <nav class="space-y-6 text-sm">
-          <div v-for="group in filteredStaticItems" :key="group.category" class="space-y-1.5">
-            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-2">
-              {{ group.category }}
-            </div>
-            <NuxtLink
-              v-for="item in group.items"
-              :key="item.path"
-              :to="item.path"
-              class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors"
-              :class="[
-                route.path === item.path || (item.path === '/' && path === '/')
-                  ? 'bg-sky-500/15 text-sky-400 font-semibold border border-sky-500/30'
-                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-900/80'
-              ]"
-            >
-              <span>{{ item.title }}</span>
-            </NuxtLink>
-          </div>
-        </nav>
+    <!-- Main 3-Column Layout Container -->
+    <div class="max-w-[1440px] 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 flex-1 flex w-full gap-8 lg:gap-10 xl:gap-12 relative">
+      <!-- Column 1: Left Desktop Navigation Sidebar -->
+      <aside class="w-72 border-r border-[#e2e2e3] dark:border-[#2e2e32] py-8 pr-6 hidden md:block shrink-0 sticky top-16 h-[calc(100vh-4rem)]">
+        <DocsSidebar />
       </aside>
 
-      <!-- Mobile Slide-over Drawer Menu -->
-      <div v-if="mobileMenuOpen" class="fixed inset-0 z-50 flex md:hidden">
-        <div class="fixed inset-0 bg-black/70 backdrop-blur-sm" @click="mobileMenuOpen = false" />
-        <aside class="relative w-72 bg-gray-950 border-r border-gray-800 p-6 flex flex-col h-full z-10 overflow-y-auto">
-          <div class="flex items-center justify-between mb-6">
-            <div class="font-bold text-sky-400 text-sm">&lt;/&gt; Docs Menu</div>
-            <button type="button" class="text-gray-400 hover:text-white text-sm" @click="mobileMenuOpen = false">
-              ✕ Close
+      <!-- Mobile Navigation Slideover Drawer -->
+      <div v-if="mobileMenuOpen" class="fixed inset-0 z-50 flex md:hidden" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div
+          class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+          @click="mobileMenuOpen = false"
+        />
+
+        <!-- Slideover Content -->
+        <aside class="relative w-80 max-w-[85vw] bg-[#ffffff] dark:bg-[#161618] border-r border-[#e2e2e3] dark:border-[#2e2e32] p-6 flex flex-col h-full z-10 overflow-y-auto shadow-2xl">
+          <div class="flex items-center justify-between mb-5 pb-4 border-b border-[#e2e2e3] dark:border-[#2e2e32]">
+            <div class="flex items-center gap-2.5 font-bold text-[#213547] dark:text-[#dfdfd6] text-base font-sans">
+              <span class="w-7 h-7 rounded-md bg-[#646cff]/10 text-[#3451b2] dark:text-[#a8b1ff] border border-[#646cff]/20 flex items-center justify-center font-mono text-xs font-bold">
+                &lt;/&gt;
+              </span>
+              <span>Navigation</span>
+            </div>
+            <button
+              type="button"
+              class="p-1.5 rounded-lg text-[#90a4ae] dark:text-[#98989f] hover:bg-[#f6f6f7] dark:hover:bg-[#202127] cursor-pointer"
+              aria-label="Close menu"
+              @click="mobileMenuOpen = false"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
 
-          <div class="mb-4">
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Search docs..."
-              class="w-full px-3 py-1.5 text-xs bg-gray-900 border border-gray-800 rounded-lg text-gray-200 focus:outline-none focus:border-sky-500"
-            />
+          <!-- Mobile Theme Toggle -->
+          <div class="mb-5 pb-4 border-b border-[#e2e2e3] dark:border-[#2e2e32] flex items-center justify-between">
+            <span class="text-xs font-mono font-medium text-[#90a4ae] dark:text-[#98989f]">Theme Mode</span>
+            <ClientOnly>
+              <button
+                type="button"
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#f6f6f7] dark:bg-[#202127] text-[#476582] dark:text-[#dfdfd6] border border-[#e2e2e3] dark:border-[#2e2e32] transition-colors cursor-pointer"
+                :aria-label="colorMode.value === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+                @click="colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'"
+              >
+                <svg v-if="colorMode.value === 'dark'" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <svg v-else class="w-4 h-4 text-[#476582]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span class="font-mono text-xs">{{ colorMode.value === 'dark' ? 'Dark' : 'Light' }}</span>
+              </button>
+              <template #fallback>
+                <div class="h-7 w-16 rounded-lg bg-[#f6f6f7] dark:bg-[#202127] animate-pulse" />
+              </template>
+            </ClientOnly>
           </div>
 
-          <nav class="space-y-6 text-sm flex-1">
-            <div v-for="group in filteredStaticItems" :key="group.category" class="space-y-1.5">
-              <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-2">
-                {{ group.category }}
-              </div>
-              <NuxtLink
-                v-for="item in group.items"
-                :key="item.path"
-                :to="item.path"
-                class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors"
-                :class="[
-                  route.path === item.path || (item.path === '/' && path === '/')
-                    ? 'bg-sky-500/15 text-sky-400 font-semibold border border-sky-500/30'
-                    : 'text-gray-400 hover:text-gray-200 hover:bg-gray-900/80'
-                ]"
-                @click="mobileMenuOpen = false"
-              >
-                <span>{{ item.title }}</span>
-              </NuxtLink>
-            </div>
-          </nav>
+          <DocsSidebar @item-click="mobileMenuOpen = false" />
         </aside>
       </div>
 
-      <!-- Main Content Renderer Area -->
-      <main class="flex-1 py-8 md:pl-10 min-w-0">
-        <div v-if="page" class="prose prose-invert max-w-none prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-800 prose-a:text-sky-400">
+      <!-- Column 2: Center Main Content Area -->
+      <main class="flex-1 py-8 min-w-0">
+        <!-- Breadcrumbs -->
+        <DocsBreadcrumb :path="path" :title="page?.title" />
+
+        <!-- Document Content -->
+        <article v-if="page" class="prose-docs">
           <ContentRenderer :value="page" />
-        </div>
-        <div v-else-if="error || !page" class="p-6 rounded-xl border border-rose-900/50 bg-rose-950/20 text-rose-300">
-          <h2 class="text-base font-bold">Document Not Found</h2>
-          <p class="text-xs text-rose-400 mt-1">The requested documentation page could not be located.</p>
-          <NuxtLink to="/" class="inline-block mt-4 text-xs underline text-sky-400">Return to Documentation Hub</NuxtLink>
+          <DocsPagination :current-path="path" />
+        </article>
+
+        <!-- 404 / Missing Page State -->
+        <div
+          v-else-if="error || !page"
+          class="p-8 rounded-2xl border border-[#e2e2e3] dark:border-[#2e2e32] bg-[#f6f6f7] dark:bg-[#202127]/60 shadow-xs max-w-xl mx-auto my-12 text-center"
+        >
+          <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center mx-auto mb-4 font-mono font-bold text-lg">
+            404
+          </div>
+          <h2 class="text-xl font-bold text-[#213547] dark:text-[#dfdfd6] font-sans">
+            Document Not Found
+          </h2>
+          <p class="text-sm text-[#476582] dark:text-[#98989f] mt-2 leading-relaxed">
+            The documentation topic you requested could not be located in the current collection.
+          </p>
+          <div class="mt-6">
+            <NuxtLink
+              to="/"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-[#3451b2] dark:bg-[#5c73e7] hover:bg-[#3a5ccc] dark:hover:bg-[#646cff] text-white shadow-xs cursor-pointer transition-colors"
+            >
+              Return to Documentation Hub
+            </NuxtLink>
+          </div>
         </div>
       </main>
+
+      <!-- Column 3: Right Desktop Table of Contents (TOC) -->
+      <aside class="w-64 border-l border-[#e2e2e3] dark:border-[#2e2e32] py-8 pl-6 hidden xl:block shrink-0 sticky top-16 h-[calc(100vh-4rem)]">
+        <DocsToc :links="tocLinks" />
+      </aside>
     </div>
   </div>
 </template>
