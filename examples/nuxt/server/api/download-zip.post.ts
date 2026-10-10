@@ -54,10 +54,8 @@ export default defineEventHandler(async (event) => {
   const zipName = body.zipName ?? "files.zip";
   const zip = new JSZip();
 
-  // 🔒 prevent open proxy
   const config = useRuntimeConfig();
 
-  // Validate all URLs upfront
   body.files.forEach(({ url }) => {
     validateAllowedDomain(url, config.allowedDomains);
   });

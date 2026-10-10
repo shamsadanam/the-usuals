@@ -1,20 +1,10 @@
 <script setup lang="ts">
-// Password login flow (browser-egress model).
-//
-//   1. Browser POSTs credentials straight to the backend `/login`. The Node
-//      process can't egress, so this MUST go through $api's external baseURL
-//      (no `baseURL: "/api/"` override here).
-//   2. Backend returns { token, user }. We hand that to our local seal route
-//      POST /api/auth/session (baseURL "/api/") which writes the encrypted
-//      http-only cookie via setUserSession().
-//   3. fetchSession() refreshes the reactive useUserSession() state, then we
-//      redirect into the guarded area.
+// Browser-egress login flow. See docs/content/nuxt/4.patterns/1.authentication-login.md
 definePageMeta({ layout: false });
 
 const { loggedIn, fetch: fetchSession, clear: clearSession } = useUserSession();
 const { $api } = useNuxtApp();
 
-// Already sealed? Skip the form.
 if (loggedIn.value) await navigateTo("/dashboard");
 
 const form = reactive({ email: "", password: "" });
@@ -25,7 +15,6 @@ async function onSubmit() {
   pending.value = true;
   errorMsg.value = "";
   try {
-    // Step 1 — hit the backend directly (external baseURL, no /api/ override).
     const res = await $api<{
       status_code: number;
       data?: { token: string; user: Record<string, unknown> };
@@ -40,14 +29,12 @@ async function onSubmit() {
 
     const { token, user } = res.data ?? {};
 
-    // Step 2 — seal into the encrypted cookie via the local Nitro route.
     await $api("/auth/session", {
       baseURL: "/api/",
       method: "POST",
       body: { user, token, loggedInAt: Date.now() },
     });
 
-    // Step 3 — refresh reactive session state, then redirect.
     await fetchSession();
     await navigateTo("/dashboard");
   } catch (e) {

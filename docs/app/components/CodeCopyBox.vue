@@ -51,8 +51,6 @@ const handleCopy = async () => {
     </div>
 
     <!-- Code Content -->
-    <div class="p-4 sm:p-5 overflow-x-auto text-[#dfdfd6] leading-relaxed whitespace-pre font-mono text-[14.5px]">
-      <code>{{ code }}</code>
-    </div>
+    <pre class="p-4 sm:p-5 overflow-x-auto text-[#dfdfd6] leading-relaxed whitespace-pre font-mono text-[14.5px] m-0 bg-transparent! border-0! shadow-none!"><code>{{ code }}</code></pre>
   </div>
 </template>

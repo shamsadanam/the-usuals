@@ -215,7 +215,7 @@ const PPNode = defineComponent({
                   {
                     type: "button",
                     class: [
-                      "ml-auto shrink-0 px-2 py-0.5 text-[10px] font-sans font-medium rounded-md bg-gray-800 hover:bg-gray-700 hover:text-white border border-gray-700/80 transition-opacity focus:outline-none focus:ring-2 focus:ring-sky-500/40 opacity-0 group-hover/row:opacity-100 focus:opacity-100",
+                      "ml-auto shrink-0 px-2 py-0.5 text-[10px] font-sans font-medium rounded-md bg-gray-800 hover:bg-gray-700 hover:text-white border border-gray-700/80 transition-opacity focus:outline-none focus:ring-2 focus:ring-sky-500/40 cursor-pointer opacity-0 group-hover/row:opacity-100 focus:opacity-100",
                       nodeCopied.value
                         ? "text-emerald-400 opacity-100"
                         : "text-gray-400",
@@ -318,7 +318,7 @@ const PPNode = defineComponent({
             <div class="flex items-center gap-2 shrink-0 ml-2">
               <button
                 type="button"
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 hover:text-white border border-gray-700/80 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 hover:text-white border border-gray-700/80 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/40"
                 :title="copied ? 'Copied to clipboard' : 'Copy JSON'"
                 @click="handleCopy"
               >

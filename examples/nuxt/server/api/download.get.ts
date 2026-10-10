@@ -45,15 +45,9 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // -------------------------------------------------------------
-  // DOMAIN ALLOWLIST (supports http + https + IPs)
-  // -------------------------------------------------------------
   const config = useRuntimeConfig();
   const parsedUrl = validateAllowedDomain(url, config.allowedDomains);
 
-  // -------------------------------------------------------------
-  // FETCH & STREAM FILE
-  // -------------------------------------------------------------
   const res = await fetch(parsedUrl.toString());
 
   if (!res.ok || !res.body) {
@@ -75,7 +69,6 @@ export default defineEventHandler(async (event) => {
     "cache-control": "no-store",
   });
 
-  // Stream directly to browser
   return res.body;
 });
 

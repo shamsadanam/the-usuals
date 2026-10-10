@@ -22,6 +22,11 @@
   --vp-c-brand: #3451b2;
   --vp-c-brand-hover: #3a5ccc;
   --vp-c-brand-soft: rgba(100, 108, 255, 0.12);
+  --vp-c-code-text: #3451b2;
+  --vp-c-code-bg: rgba(52, 81, 178, 0.08);
+  --vp-c-code-border: rgba(52, 81, 178, 0.22);
+  --vp-c-code-hover-bg: rgba(52, 81, 178, 0.14);
+  --vp-c-code-hover-border: rgba(52, 81, 178, 0.36);
 }
 
 .dark, html.dark {
@@ -37,6 +42,11 @@
   --vp-c-brand: #a8b1ff;
   --vp-c-brand-hover: #b8c0ff;
   --vp-c-brand-soft: rgba(100, 108, 255, 0.16);
+  --vp-c-code-text: #a8b1ff;
+  --vp-c-code-bg: rgba(168, 177, 255, 0.11);
+  --vp-c-code-border: rgba(168, 177, 255, 0.24);
+  --vp-c-code-hover-bg: rgba(168, 177, 255, 0.18);
+  --vp-c-code-hover-border: rgba(168, 177, 255, 0.42);
 }
 
 /* Base HTML & Body color-scheme tokens */
@@ -194,23 +204,84 @@ html.light {
   color: var(--vp-c-text-2);
 }
 
-/* Inline code pill - clean VitePress style with larger font size */
+/* Inline code pills with brand indigo accent & high contrast */
 .prose-docs :not(pre) > code {
+  display: inline;
   font-family: var(--font-mono);
-  font-size: 0.9em;
+  font-size: 0.875em;
   font-weight: 500;
-  padding: 0.22rem 0.5rem;
+  letter-spacing: -0.015em;
+  padding: 0.2em 0.45em;
+  margin: 0 0.08em;
   border-radius: 0.375rem;
-  background-color: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-border);
-  color: var(--vp-c-text-1);
-  white-space: break-spaces;
+  background-color: var(--vp-c-code-bg);
+  border: 1px solid var(--vp-c-code-border);
+  color: var(--vp-c-code-text);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  word-break: break-word;
+  vertical-align: 0.04em;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-/* Code block pre styles - comfortable font size and line height */
+/* Contextual code pills: links */
+.prose-docs a :not(pre) > code,
+.prose-docs a > code {
+  color: var(--vp-c-brand);
+  text-decoration: underline;
+  text-decoration-color: var(--vp-c-brand-soft);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.prose-docs a:hover :not(pre) > code,
+.prose-docs a:hover > code {
+  color: var(--vp-c-brand-hover);
+  background-color: var(--vp-c-code-hover-bg);
+  border-color: var(--vp-c-code-hover-border);
+  text-decoration-color: var(--vp-c-brand);
+}
+
+/* Contextual code pills: headings */
+.prose-docs h1 :not(pre) > code,
+.prose-docs h2 :not(pre) > code,
+.prose-docs h3 :not(pre) > code,
+.prose-docs h4 :not(pre) > code {
+  font-weight: 600;
+  font-size: 0.82em;
+  padding: 0.15em 0.38em;
+  vertical-align: 0.04em;
+  letter-spacing: normal;
+}
+
+.prose-docs h1 :not(pre) > code {
+  font-weight: 700;
+  font-size: 0.8em;
+}
+
+/* Contextual code pills: tables (props & API signatures) */
+.prose-docs td :not(pre) > code {
+  font-size: 0.82em;
+  padding: 0.16em 0.4em;
+  white-space: nowrap;
+}
+
+/* Contextual code pills: blockquotes */
+.prose-docs blockquote :not(pre) > code {
+  background-color: rgba(52, 81, 178, 0.06);
+  border-color: rgba(52, 81, 178, 0.18);
+}
+
+.dark .prose-docs blockquote :not(pre) > code,
+html.dark .prose-docs blockquote :not(pre) > code {
+  background-color: rgba(168, 177, 255, 0.08);
+  border-color: rgba(168, 177, 255, 0.2);
+}
+
+/* Code block pre styles */
 .prose-docs pre {
   font-family: var(--font-mono);
-  font-size: 0.92rem; /* ~14.7px */
+  font-size: 0.92rem;
   line-height: 1.75;
   padding: 1.25rem 1.4rem;
   border-radius: 0.75rem;
@@ -223,6 +294,31 @@ html.light {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* Eliminate duplicate margins when pre is wrapped inside Nuxt UI ProsePre container */
+.prose-docs .relative.group > pre,
+.prose-docs div.group > pre {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Smooth code block scrollbars */
+.prose-docs pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.prose-docs pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.prose-docs pre::-webkit-scrollbar-thumb {
+  background: rgba(142, 150, 170, 0.22);
+  border-radius: 9999px;
+}
+
+.prose-docs pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 150, 170, 0.4);
+}
+
 .prose-docs pre code {
   font-family: inherit;
   font-size: inherit;
@@ -230,6 +326,17 @@ html.light {
   background: transparent !important;
   border: none !important;
   padding: 0 !important;
+  white-space: inherit;
+}
+
+/* Copy button positioning & interaction */
+.prose-docs .group > button,
+.prose-docs button[aria-label*="copy" i],
+.prose-docs button[title*="copy" i],
+button[aria-label*="copy" i],
+button[title*="copy" i] {
+  cursor: pointer;
+  z-index: 10;
 }
 
 /* Tables */
