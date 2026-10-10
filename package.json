@@ -20,6 +20,7 @@
     "preview:docs": "pnpm --filter docs run preview --port 3002",
     "preview:nuxt": "pnpm --filter example-nuxt run preview --port 3001",
     "lint:next": "pnpm --filter example-next run lint",
-    "clean": "rm -rf node_modules docs/node_modules docs/.nuxt docs/.output docs/.data examples/*/node_modules examples/*/.next examples/*/.nuxt examples/*/.output"
+    "clean": "rm -rf node_modules docs/node_modules docs/.nuxt docs/.output docs/.data examples/*/node_modules examples/*/.next examples/*/.nuxt examples/*/.output",
+    "deploy": "cd ./docs && vercel --prod"
   }
 }
