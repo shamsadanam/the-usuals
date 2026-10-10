@@ -1,12 +1,12 @@
 # the-usuals
 
-Docs and working code for the things I reuse across projects, served at docs.shamsad.com.
+Docs and working code for the things I reuse across projects, served at [docs.shamsad.com](https://docs.shamsad.com).
 
-| Folder           | What it is                                   | Dev port | Deployed |
-| ---------------- | -------------------------------------------- | -------- | -------- |
-| `docs`           | Docs site (Nuxt 4 + Nuxt Content)            | 3002     | Vercel   |
-| `examples/next`  | Next.js 16 + React 19 app with the examples  | 3000     | No       |
-| `examples/nuxt`  | Nuxt 4 + Vue 3 app with the examples         | 3001     | No       |
+| Folder           | What it is                                   | Dev port | Deployed                                     |
+| ---------------- | -------------------------------------------- | -------- | -------------------------------------------- |
+| `docs`           | Docs site (Nuxt 4 + Nuxt Content)            | 3002     | [docs.shamsad.com](https://docs.shamsad.com) |
+| `examples/next`  | Next.js 16 + React 19 app with the examples  | 3000     | No                                           |
+| `examples/nuxt`  | Nuxt 4 + Vue 3 app with the examples         | 3001     | No                                           |
 
 Docs pages live in `docs/content/<stack>/`; the code they describe lives in `examples/<stack>/`.
 
@@ -51,7 +51,7 @@ pnpm --filter <docs|example-next|example-nuxt> run <script>
 
 ## Deploying
 
-One Vercel project, Root Directory `docs`, domain `docs.shamsad.com`.
+One Vercel project, Root Directory `docs`, domain [docs.shamsad.com](https://docs.shamsad.com).
 The example apps are not deployed; give one its own Vercel project only when it needs a live demo.
 
 ## History
