@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // Browser-egress login flow. See docs/content/nuxt/4.patterns/1.authentication-login.md
-definePageMeta({ layout: false });
+definePageMeta({ layout: false, middleware: "already-logged-in" });
 
-const { loggedIn, fetch: fetchSession, clear: clearSession } = useUserSession();
+const { fetch: fetchSession, clear: clearSession } = useUserSession();
 const { $api } = useNuxtApp();
-
-if (loggedIn.value) await navigateTo("/dashboard");
+const { auth } = useAppConfig();
+const route = useRoute();
 
 const form = reactive({ email: "", password: "" });
 const pending = ref(false);
@@ -36,7 +36,7 @@ async function onSubmit() {
     });
 
     await fetchSession();
-    await navigateTo("/dashboard");
+    await navigateTo(safeRedirect(route.query.redirect, auth.afterLoginRoute));
   } catch (e) {
     errorMsg.value =
       (e as { data?: { message?: string } })?.data?.message ??

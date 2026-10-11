@@ -89,7 +89,7 @@ if (res.status_code === 200) {
     body: { user, token, loggedInAt: Date.now() },
   });
   await fetchSession();            // refresh useUserSession() state
-  await navigateTo("/dashboard");
+  await navigateTo(safeRedirect(route.query.redirect, auth.afterLoginRoute));
 } else {
   await clearSession();
 }
@@ -115,7 +115,7 @@ await useApi("/staff", {
         body: { user, token, loggedInAt: Date.now() },
       });
       await fetchSession();
-      await navigateTo("/dashboard");
+      await navigateTo(auth.afterLoginRoute);
     }
   },
 });
@@ -147,7 +147,7 @@ Clearing is a client op; just drop the cookie:
 const { clear: clearSession } = useUserSession();
 await $api("/logout", { method: "POST", auth: true });
 await clearSession();
-await navigateTo("/");
+await navigateTo(auth.afterLogoutRoute);
 ```
 
 ## How the rest of the app consumes the sealed cookie

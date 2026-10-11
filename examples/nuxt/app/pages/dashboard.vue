@@ -1,9 +1,10 @@
 <script setup lang="ts">
-// Guarded sample page — redirect target after a successful seal.
+// Guarded sample page. Visit it signed out to see the `?redirect=` round trip.
 definePageMeta({ middleware: "logged-in" });
 
 const { session, user, clear: clearSession } = useUserSession();
 const { $api } = useNuxtApp();
+const { auth } = useAppConfig();
 
 async function logout() {
   // Best-effort backend logout, then drop the cookie client-side.
@@ -13,7 +14,7 @@ async function logout() {
     // ignore — clear locally regardless
   }
   await clearSession();
-  await navigateTo("/login");
+  await navigateTo(auth.afterLogoutRoute);
 }
 </script>
 

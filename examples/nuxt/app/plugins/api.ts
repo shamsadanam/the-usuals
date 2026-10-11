@@ -50,7 +50,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       ) {
         await nuxtApp.runWithContext(async () => {
           await clearSession();
-          await navigateTo("/");
+          await navigateTo(useAppConfig().auth.afterLogoutRoute);
         });
       }
     },
